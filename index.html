@@ -8,14 +8,15 @@
     <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>PENGIN'S GALLERY</title>
-    <div id="rect_gradient"></div>
 </head>
 
 <body>
     <button id="musicPlayer">Click to play pretensious museum music.</button>
+
     <div id="banner">
-        <img src="ImageThumbnail/birdisaworm.webp" loading="eager">
-        <h1>PENGIN'S GALLERY</h1>
+        <img src="ImageThumbnail/birdisaworm.webp" id='bannerImg' loading="eager">
+        <div id="mask"><h1>PENGIN'S GALLERY</h1></div>
+        <div id="rect_gradient"></div>
     </div>
     
     <audio id="music" loop>
@@ -101,7 +102,7 @@
     <h2>Artfight 2023</h2>
     <hr>
     <div class="gallery">
-         <div class = "grid-item"><img src="ImageThumbnail\hahaumbrella.gif"><p>08/01/23</p></div>
+        <div class = "grid-item"><img src="ImageThumbnail\hahaumbrella.gif"><p>08/01/23</p></div>
         <div class = "grid-item"><img src="ImageThumbnail\rapier.gif"><p>08/01/23</p></div>
         <div class = "grid-item"><img src="ImageThumbnail\stemnerds.webp"><p>07/31/23</p></div>
         <div class = "grid-item"><img src="ImageThumbnail\StickmanAppreciationGIF.gif"><p>07/31/23</p></div>

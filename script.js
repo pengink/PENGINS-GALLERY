@@ -3,7 +3,7 @@ const lightbox = document.createElement('div');
  lightbox.id = 'lightbox'
  document.body.appendChild(lightbox);
 
- const images = document.querySelectorAll('.gallery img, .gallery video'); // save volume level
+ const images = document.querySelectorAll('.gallery img, .gallery video'); // save volume level you
  images.forEach(image => {
   if (image.tagName == 'IMG') {image.loading = 'lazy';}
   image.addEventListener('click', () => {
@@ -39,6 +39,8 @@ const lightbox = document.createElement('div');
               lightbox.removeChild(lightbox.firstChild)
           }
           lightbox.appendChild(img);
+          lightbox.appendChild(placeholder);
+    
           document.body.style.overflowY = 'hidden';
       });
   });
@@ -50,7 +52,9 @@ const lightbox = document.createElement('div');
     document.body.style.overflowY = 'scroll';
  });
 
-
+//random banner
+const onlyImages = document.querySelectorAll('.gallery img');
+document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
 
  //music controller
 music.volume = 0.1;
@@ -76,7 +80,7 @@ images.forEach(image => {
         var rgb = getAverageRGB(image);
         let newColor = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
         root.style.setProperty('--newColor', newColor)
-        root.style.setProperty('--newShadow', 'rgba('+rgb.r+','+rgb.g+','+rgb.b+', 0.4)');  // set new color value here
+        root.style.setProperty('--newShadow', 'rgba('+rgb.r+','+rgb.g+','+rgb.b+', 0.6)');  // set new color value here
        // document.body.style.backgroundColor = newColor
      });
     image.addEventListener('mouseout', () => {
