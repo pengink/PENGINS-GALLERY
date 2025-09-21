@@ -13,7 +13,6 @@ const lightbox = document.createElement('div');
           img.loading = 'eager'
           placeholder.classList.add('blur');
           placeholder.src = image.src
-          console.log('url('+image.src+')');
 
           if (image.tagName == 'VIDEO') {
             img.autoplay = true;
@@ -36,7 +35,9 @@ const lightbox = document.createElement('div');
           }
 
           while (lightbox.firstChild) {
-              lightbox.removeChild(lightbox.firstChild)
+            for (var i=0;i=lightbox.children.length;i++) {
+              lightbox.removeChild(lightbox.lastChild);
+            }
           }
           lightbox.appendChild(img);
           lightbox.appendChild(placeholder);
@@ -47,7 +48,9 @@ const lightbox = document.createElement('div');
  lightbox.addEventListener('click', e =>  {
     if (e.target !== lightbox && lightbox.firstChild.tagName == "VIDEO") {return}
     lightbox.classList.remove('active');
-    lightbox.removeChild(lightbox.firstChild)
+    for (var i=0;i=lightbox.children.length;i++) {
+              lightbox.removeChild(lightbox.lastChild);
+    }
     document.getElementsByClassName("Body").maxHeight = "auto"
     document.body.style.overflowY = 'scroll';
  });
@@ -155,14 +158,7 @@ function resizeMasonryItem(item){
 }
 
 function resizeAllMasonryItems(){
-  // Get all item class objects in one list
-  //WORKs
   var allItems = document.getElementsByClassName("grid-item");
-
-  /*
-   * Loop through the above list and execute the spanning function to
-   * each list-item (i.e. each masonry item)
-   */
   for(var i=0;i<allItems.length;i++){
     resizeMasonryItem(allItems[i]);
   }
@@ -174,7 +170,7 @@ function waitForImages() {
     imagesLoaded( allItems[i], function(instance) {
       var item = instance.elements[0];
       resizeMasonryItem(item);
-    } );
+    });
   }
 }
 
@@ -184,3 +180,23 @@ masonryEvents.forEach( function(event) {
 });
 
 waitForImages();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const gridItems = document.querySelectorAll('.grid-item');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-viewport');
+      } else {
+      entry.target.classList.remove('in-viewport');
+      } 
+    });
+  }, {
+    //threshold: 0.2
+  });
+
+  gridItems.forEach((item) => {
+    observer.observe(item);
+  });
+});
