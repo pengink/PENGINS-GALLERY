@@ -75,7 +75,7 @@ h2 {
   justify-content: center;
   align-content: center;
   place-items: center;
-  width: 100vw;
+  width: 100%;
   column-gap: 8px;
   margin-top: 5vh;
   padding: 12px;
@@ -85,7 +85,7 @@ h2 {
   z-index: 3;
 }
 
-@media screen and (orientation: landscape) {
+@media screen and (max-width: 600px) {
     .gallery {
       display: grid;
       justify-content: center;
@@ -94,7 +94,7 @@ h2 {
       width: 100vw;
       column-gap: 8px;
       padding: 12px;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       background-image: linear-gradient(to bottom, black, black);
       z-index: 3;
     }
