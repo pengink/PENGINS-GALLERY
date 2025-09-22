@@ -91,10 +91,10 @@ h2 {
       justify-content: center;
       align-content: center;
       place-items: center;
-      width: 100vw;
+      width: 100%;
       column-gap: 8px;
       padding: 12px;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       background-image: linear-gradient(to bottom, black, black);
       z-index: 3;
 
