@@ -94,7 +94,7 @@ h2 {
       width: 100vw;
       column-gap: 8px;
       padding: 12px;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       background-image: linear-gradient(to bottom, black, black);
       z-index: 3;
 
