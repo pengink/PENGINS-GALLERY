@@ -55,9 +55,7 @@ const lightbox = document.createElement('div');
     document.body.style.overflowY = 'scroll';
  });
 
-//random banner
-const onlyImages = document.querySelectorAll('.gallery img');
-document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
+
 
  //music controller
 music.volume = 0.1;
@@ -181,8 +179,11 @@ masonryEvents.forEach( function(event) {
 
 waitForImages();
 
+
+// if in viewport
 document.addEventListener('DOMContentLoaded', () => {
   const gridItems = document.querySelectorAll('.grid-item');
+  const bannerImg = document.getElementById('bannerImg');
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -193,10 +194,45 @@ document.addEventListener('DOMContentLoaded', () => {
       } 
     });
   }, {
-    //threshold: 0.2
-  });
-
+    threshold: 0
+  }
+);
   gridItems.forEach((item) => {
     observer.observe(item);
   });
+
+  const observer1 = new IntersectionObserver((entry) => {
+    if (entry.at(0).isIntersecting) {
+      entry.at(0).target.classList.add('in-viewport');
+    } else {
+      entry.at(0).target.classList.remove('in-viewport');
+    }
+  }, {
+    threshold : 0.6
+  }
+);
+  observer1.observe(bannerImg);
+
 });
+
+
+// check orientation
+const portraitMediaQuery = window.matchMedia("(orientation: portrait)");
+
+portraitMediaQuery.addEventListener("change", (event) => {
+  if (event.matches) {
+    const onlyImages = document.querySelectorAll('#bannerPortrait img');
+    document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
+  } else {
+    const onlyImages = document.querySelectorAll('#bannerLandscape img');
+    document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
+  }
+})
+
+if (portraitMediaQuery.matches) {
+  const onlyImages = document.querySelectorAll('#bannerPortrait img');
+  document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
+} else {
+  const onlyImages = document.querySelectorAll('#bannerLandscape img');
+  document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
+}

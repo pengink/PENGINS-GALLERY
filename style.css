@@ -5,6 +5,7 @@
 body {
   background-color: #000000;
   height: 100vh;
+  width: 100vw;
   margin: 0;
   overflow-x: hidden;
   font-family:Georgia, 'Times New Roman', Times, serif;
@@ -54,8 +55,15 @@ body {
   width: 100vw;
   min-height: 100vh;
   object-fit: cover;
+
+  filter: brightness(0.6) blur(2px);
+  transition: filter 0.5s ease-out;
   
   z-index: 0;
+}
+
+#banner img.in-viewport {
+  filter: brightness(1.0) blur(0px);
 }
 
 p {
@@ -198,3 +206,7 @@ button {
   z-index: 2;
 }
 
+#bannerOptions img {
+  display: none;
+  position: fixed;
+}
