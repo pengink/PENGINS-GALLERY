@@ -3,7 +3,7 @@ const lightbox = document.createElement('div');
  lightbox.id = 'lightbox'
  document.body.appendChild(lightbox);
 
- const images = document.querySelectorAll('.gallery img, .gallery video'); // save volume level you
+ const images = document.querySelectorAll('.grid-item'); // save volume level you
  images.forEach(image => {
   if (image.tagName == 'IMG') {image.loading = 'lazy';}
   image.addEventListener('click', () => {
@@ -56,7 +56,6 @@ const lightbox = document.createElement('div');
  });
 
 
-
  //music controller
 music.volume = 0.1;
 document.getElementById("musicPlayer").addEventListener('click', () => {
@@ -89,10 +88,6 @@ images.forEach(image => {
         root.style.setProperty('--newShadow', 'black');*/
     });
 });
-
-// average rgb finder
-/*var rgb = getAverageRGB(document.getElementById('i'));
-let newColor = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')'; */
 
 function getAverageRGB(imgEl) {
     
@@ -181,10 +176,22 @@ waitForImages();
 
 
 // if in viewport
-document.addEventListener('DOMContentLoaded', () => {
-  const gridItems = document.querySelectorAll('.grid-item');
-  const bannerImg = document.getElementById('bannerImg');
+var gridItems = document.querySelectorAll('.grid-item');
+const bannerImg = document.querySelector('#bannerImg');
 
+const observer1 = new IntersectionObserver((entry) => {
+  if (entry.at(0).isIntersecting) {
+    entry.at(0).target.classList.add('in-viewport');
+  } else {
+    entry.at(0).target.classList.remove('in-viewport');
+    }
+  }, {
+    threshold : 0.4
+  }
+);
+  observer1.observe(bannerImg);
+
+function intersectionObserve() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -200,20 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
   gridItems.forEach((item) => {
     observer.observe(item);
   });
-
-  const observer1 = new IntersectionObserver((entry) => {
-    if (entry.at(0).isIntersecting) {
-      entry.at(0).target.classList.add('in-viewport');
-    } else {
-      entry.at(0).target.classList.remove('in-viewport');
-    }
-  }, {
-    threshold : 0.6
-  }
-);
-  observer1.observe(bannerImg);
-
-});
+}
 
 
 // check orientation
@@ -236,3 +230,128 @@ if (portraitMediaQuery.matches) {
   const onlyImages = document.querySelectorAll('#bannerLandscape img');
   document.getElementById('bannerImg').src = onlyImages.item(Math.floor(Math.random() * onlyImages.length)).src;
 }
+
+// check grind
+const checkboxes = document.querySelectorAll('#filterDropdown input');
+const gallery = document.querySelector('.gallery');
+
+checkboxes.forEach((checkbox) => {
+  checkbox.checked = true
+  matchFilter();
+
+  checkbox.addEventListener('change', () => {
+    selectAll(checkbox);
+    matchFilter();
+  });
+});
+
+function getWEBP(link) {
+  var filename = link.substring(link.lastIndexOf('/'), link.lastIndexOf('.'));
+  if (link.includes('VideoLibrary') || link.includes('.gif')) {
+    return 'ImageThumbnail'+filename+'.gif';
+  }
+  return 'ImageThumbnail'+filename+'.webp'
+
+}
+
+function selectAll(checkbox) {
+  if (checkbox.name == 'everything') {
+    if (checkbox.checked == true) {
+      checkboxes.forEach(checkbox => {
+      checkbox.checked = true
+    });
+    } else {
+      checkboxes.forEach(checkbox => {
+      checkbox.checked = false
+    });
+    }
+  } else if (document.querySelectorAll("#filterDropdown input[type='checkbox']:checked").length == checkboxes.length - 1) {
+    if (checkbox.checked == true) {
+      checkboxes.forEach(checkbox => {
+      checkbox.checked = true
+    });
+  } else {
+      document.querySelector('#everything').checked = false
+  }
+  }
+}
+
+function getSelector(checkedBoxes) {
+  var selector = ""
+  var checkedIds = Array.from(checkedBoxes).map(checkbox => checkbox.id);
+  for (var i=0; i<checkedIds.length; i++) {
+    if (checkedIds.at(i) == 'everything') {
+      continue;
+    }
+    selector = selector + '.' + checkedIds.at(i)
+    if (i != checkedIds.length - 1) {
+      selector = selector + ', '
+    }
+  }
+  return selector;
+}
+
+function getFilterSummary(checkedBoxes) {
+  var text = 'Filters: '
+  if (checkedBoxes.length == 0) {
+      return 'Filters: none';
+  } else if (checkedBoxes.item(0).name == 'everything') {
+      text = text + ' everything'
+      return text;
+  }
+  for (var i=0; i<checkedBoxes.length; i++) {
+    text = text + checkedBoxes.item(i).name;
+    if (i!=checkedBoxes.length - 1) {
+      text = text + ', '
+    }
+  }
+  console.log(text);
+  return text;
+}
+
+function matchFilter() {
+  const checkedBoxes = document.querySelectorAll("#filterDropdown input[type='checkbox']:checked");
+  
+   document.querySelector('summary').textContent = getFilterSummary(checkedBoxes)
+
+  gallery.replaceChildren();
+  if (getSelector(checkedBoxes) == '') {
+    return;
+  }
+  document.querySelector('.imageList').querySelectorAll(getSelector(checkedBoxes)).forEach(item => {
+
+    const new_item = document.createElement('div');
+    const new_image = document.createElement('img');
+    new_item.classList.add('grid-item');
+    new_image.src = getWEBP(item.firstChild.src);
+
+    gallery.appendChild(new_item);
+    new_item.appendChild(new_image);
+    // add lightbox
+    new_item.addEventListener('click', () => activateLightBox(new_item, item.firstChild.tagName, item.firstChild.src));
+
+
+  });
+  
+  gridItems = document.querySelectorAll('.grid-item');
+  waitForImages();
+  intersectionObserve();
+
+}
+
+function activateLightBox(self, ogTag, ogLink) {
+  if (self.tagName == 'IMG') {self.loading = 'lazy';}
+
+  lightbox.classList.add('active');
+  const img = document.createElement(ogTag);
+  if (ogTag == 'VIDEO') {
+            img.autoplay = true;
+            img.controls = true;
+            img.loop = true;
+  }
+  img.src = ogLink
+  img.loading = 'eager'
+
+  lightbox.appendChild(img);
+
+};
